@@ -27,12 +27,23 @@ const cookiesUrl = process.env.COOKIE_FILE || "";
 async function downloadFile(url, outputPath) {
   const writer = fs.createWriteStream(outputPath);
 
+  console.log(`Starting download from ${url}...`);
+
   const response = await axios.get(url, { responseType: "stream" });
+  console.log(`Response status: ${response.status}`);
+  console.log(`Response headers:`, response.headers);
+
   response.data.pipe(writer);
 
   return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
+    writer.on("finish", () => {
+      console.log(`File downloaded successfully to ${outputPath}`);
+      resolve();
+    });
+    writer.on("error", (error) => {
+      console.error(`Error writing to file ${outputPath}: ${error.message}`);
+      reject(error);
+    });
   });
 }
 
@@ -49,11 +60,15 @@ async function downloadYtDlpAndCookies() {
     }
     console.log("yt-dlp downloaded successfully.");
 
-    console.log("Downloading cookies.txt...");
-    await downloadFile(cookiesUrl, cookieFilePath);
-    console.log("cookies.txt downloaded successfully.");
+    if (cookiesUrl) {
+      console.log("Downloading cookies.txt...");
+      await downloadFile(cookiesUrl, cookieFilePath);
+      console.log("cookies.txt downloaded successfully.");
+    } else {
+      console.warn("COOKIE_FILE environment variable not set; skipping cookies.txt download.");
+    }
   } catch (error) {
-    console.error("Error downloading files:", error.message);
+    console.error("Error downloading yt-dlp or cookies.txt:", error.message);
     throw error;
   }
 }
@@ -81,28 +96,26 @@ async function runYtDlp(url) {
     return new Promise((resolve, reject) => {
       execFile(ytDlpBinaryPath, args, (error, stdout, stderr) => {
         if (error) {
+          console.error("Error executing yt-dlp:", error.message);
           reject(`Error: ${error.message}`);
           return;
         }
         if (stderr) {
+          console.warn("yt-dlp stderr output:", stderr);
           reject(`Stderr: ${stderr}`);
           return;
         }
         try {
           const result = JSON.parse(stdout);
-          // const filteredResult = result.formats.filter(format =>
-          //     !format.url.includes('.m3u8') &&
-          //     format.filesize && format.filesize <= 84 * 1024 * 1024
-          // );
-
           resolve(result);
         } catch (parseError) {
+          console.error("Failed to parse JSON from yt-dlp output:", parseError.message);
           reject(`Failed to parse JSON: ${parseError.message}`);
         }
       });
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error in runYtDlp:", err.message);
     throw err;
   }
 }
@@ -125,14 +138,14 @@ app.get("/ytdl", async (req, res) => {
   if (!url) {
     return res.status(400).json({ error: "URL query parameter is required" });
   }
-  console.log(url);
+  console.log("Received URL:", url);
 
   try {
     const result = await runYtDlp(url);
-    console.log(result);
+    console.log("yt-dlp result:", result);
     res.json({ success: true, data: result });
   } catch (error) {
-    console.log("bal",error);
+    console.error("Error in /ytdl GET endpoint:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -149,6 +162,7 @@ app.post("/ytdl", async (req, res) => {
     const result = await runYtDlp(url);
     res.json({ success: true, data: result });
   } catch (error) {
+    console.error("Error in /ytdl POST endpoint:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -160,6 +174,7 @@ app.get("/proxy", async (req, res) => {
     res.set("Content-Type", "image/jpeg");
     res.send(response.data);
   } catch (error) {
+    console.error("Error in /proxy endpoint:", error.message);
     res.status(500).send("Error fetching image");
   }
 });
@@ -168,15 +183,3 @@ app.get("/proxy", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-// Example usage:
-// runYtDlp(' https://www.instagram.com/reel/C-iMPtxvxUQ/?igsh=aWw5dnM5Nml3Y3l1')
-//     .then(result => {
-//         console.log('Filtered formats:', result);
-//         const outputPath = path.join(process.cwd(), 'filtered_formats.json');
-//         fs.writeFileSync(outputPath, JSON.stringify(result, null, 2));
-//         console.log(`Filtered formats saved to ${outputPath}`);
-//     })
-//     .catch(error => {
-//         console.error(error);
-//     });
