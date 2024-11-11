@@ -1,0 +1,439 @@
+:root {
+    --primary-color: #00ff00;
+    --secondary-color: #ff00ff;
+    --background-color: #0a0a0a;
+    --text-color: #ffffff;
+    --neon-glow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color), 0 0 15px var(--primary-color), 0 0 20px var(--primary-color);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    flex-grow: 1;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.glitch {
+    font-size: 3rem;
+    position: relative;
+    color: var(--primary-color);
+    text-shadow: var(--neon-glow);
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--secondary-color);
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--primary-color);
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(17px, 9999px, 94px, 0);
+    }
+
+    20% {
+        clip: rect(37px, 9999px, 44px, 0);
+    }
+
+    40% {
+        clip: rect(58px, 9999px, 54px, 0);
+    }
+
+    60% {
+        clip: rect(80px, 9999px, 66px, 0);
+    }
+
+    80% {
+        clip: rect(108px, 9999px, 85px, 0);
+    }
+
+    100% {
+        clip: rect(129px, 9999px, 144px, 0);
+    }
+}
+
+@keyframes glitch-anim-2 {
+    0% {
+        clip: rect(129px, 9999px, 36px, 0);
+    }
+
+    20% {
+        clip: rect(36px, 9999px, 4px, 0);
+    }
+
+    40% {
+        clip: rect(62px, 9999px, 21px, 0);
+    }
+
+    60% {
+        clip: rect(92px, 9999px, 75px, 0);
+    }
+
+    80% {
+        clip: rect(10px, 9999px, 126px, 0);
+    }
+
+    100% {
+        clip: rect(54px, 9999px, 97px, 0);
+    }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+main {
+    display: grid;
+    gap: 2rem;
+}
+
+section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(var(--primary-color), 0.2);
+}
+
+section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2), 0 0 0 1px var(--primary-color);
+}
+
+form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+input[type="url"],
+input[type="email"],
+textarea {
+    flex-grow: 1;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+    box-shadow: 0 0 10px var(--secondary-color);
+}
+
+.result-container {
+    margin-top: 2rem;
+}
+
+.result-content {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.result-content img {
+    max-height: 300px;
+}
+
+.thumbnail {
+    max-width: 100%;
+    height: auto;
+
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.download-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.download-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1;
+    min-width: 200px;
+}
+
+.play-btn,
+.download-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--background-color);
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.play-btn {
+    background-color: var(--primary-color);
+}
+
+.download-btn {
+    background-color: var(--secondary-color);
+}
+
+.play-btn:hover,
+.download-btn:hover {
+    box-shadow: 0 0 10px currentColor;
+}
+
+footer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--primary-color);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.developer-info {
+    flex: 1;
+}
+
+.links {
+    display: flex;
+    gap: 1rem;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.neon-text {
+    color: var(--primary-color);
+    text-shadow: 0 0 5px var(--primary-color);
+}
+
+.neon-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    margin: 15% auto;
+    padding: 2rem;
+    border: 1px solid var(--primary-color);
+    width: 80%;
+    max-width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px var(--primary-color);
+}
+
+.close {
+    color: var(--primary-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--secondary-color);
+}
+
+@media (min-width: 768px) {
+    main {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .downloader {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (min-width: 1024px) {
+    main {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.error {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+audio {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.download-options {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.format-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.format-section h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.download-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.download-item h5 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.mute-icon {
+    font-size: 1.2rem;
+}
+
+.play-btn,
+.download-btn {
+    display: inline-block;
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--background-color);
+    font-weight: bold;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.play-btn {
+    background-color: var(--primary-color);
+}
+
+.download-btn {
+    background-color: var(--secondary-color);
+}
+
+.play-btn:hover,
+.download-btn:hover {
+    box-shadow: 0 0 10px currentColor;
+}
+
+video,
+audio {
+    width: 100%;
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+    .download-options {
+        flex-direction: row;
+    }
+
+    .format-section {
+        flex: 1;
+    }
+}
